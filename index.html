@@ -598,6 +598,18 @@ document.getElementById('amountInput').addEventListener('keydown',e=>{if(e.key==
 document.getElementById('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('amountInput').focus();});
 document.getElementById('budgetInput').addEventListener('keydown',e=>{if(e.key==='Enter')saveBudget();});
 renderCats(); renderMonthPicker(); render();
+
+// Auto-refresh at midnight: check every minute if date has changed
+let _lastDate = todayStr();
+setInterval(function() {
+  const now = todayStr();
+  if (now !== _lastDate) {
+    _lastDate = now;
+    selectedDate = now;
+    calMonth = nowMonthStr();
+    render();
+  }
+}, 60000);
 </script>
 </body>
 </html>
