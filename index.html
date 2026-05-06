@@ -600,7 +600,7 @@ document.getElementById('budgetInput').addEventListener('keydown',e=>{if(e.key==
 renderCats(); renderMonthPicker(); render();
 
 // Auto-refresh at midnight: check every minute if date has changed
-/*let _lastDate = todayStr();
+let _lastDate = todayStr();
 setInterval(function() {
   const now = todayStr();
   if (now !== _lastDate) {
@@ -610,7 +610,6 @@ setInterval(function() {
     render();
   }
 }, 60000);
-*/
 </script>
 </body>
 </html>
