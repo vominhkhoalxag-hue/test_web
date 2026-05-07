@@ -184,7 +184,7 @@
 <div class="app">
   <div class="header">
     <div class="header-top">
-      <div class="title">Chi tiêu 8h00 7/5<br><span id="titleDate">hôm nay</span></div>
+      <div class="title">Chi tiêu 8h13 tối 7/5<br><span id="titleDate">hôm nay</span></div>
       <span class="month-badge" id="monthBadge"></span>
     </div>
   </div>
@@ -329,8 +329,20 @@ function parseAmount(raw) {
     return millions + extra;
   });
 
-  // đổi đơn vị còn lại (tr không có phần sau, k)
+  // đổi đơn vị tr không có phần sau
   raw = raw.replace(/(\d+(?:\.\d+)?)(tr|triệu|trieu)/g, (_, n) => Number(n) * 1000000);
+
+  // hỗ trợ kiểu "1k548" = 1548, "1k54" = 1540, "1k5" = 1500
+  raw = raw.replace(/(\d+(?:\.\d+)?)k(\d+)/g, (_, a, b) => {
+    const base = Number(a) * 1000;
+    const len = b.length;
+    let extra;
+    if (len === 1)      extra = Number(b) * 100;
+    else if (len === 2) extra = Number(b) * 10;
+    else                extra = Number(b);
+    return base + extra;
+  });
+
   raw = raw.replace(/(\d+(?:\.\d+)?)k(?!\w)/g, (_, n) => Number(n) * 1000);
 
   // chỉ cho phép ký tự an toàn
