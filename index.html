@@ -184,7 +184,7 @@
 <div class="app">
   <div class="header">
     <div class="header-top">
-      <div class="title">Chi tiêu<br><span id="titleDate">hôm nay</span></div>
+      <div class="title">Chi tiêu<br><span id="titleDate">12h38 9/5</span></div>
       <span class="month-badge" id="monthBadge"></span>
     </div>
   </div>
@@ -415,7 +415,10 @@ function addEntry() {
   const amount = parseAmount(document.getElementById('amountInput').value);
   if (!name || !amount) { document.getElementById(name?'amountInput':'nameInput').focus(); return; }
   const cat = CATS.find(c=>c.label===selectedCat)||CATS[5];
-  entries.unshift({ id: Date.now(), name, amount, cat: cat.label, icon: cat.icon, color: cat.color, date: selectedDate, time: new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}) });
+  entries.unshift({ id: Date.now(), name, amount, cat: cat.label, icon: cat.icon, color: cat.color, date: todayStr(), time: new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}) });
+  //reset UI về hôm nay sau khi nhập thêm
+  selectedDate = todayStr();
+  calMonth = nowMonthStr();
   save();
   document.getElementById('nameInput').value = '';
   document.getElementById('amountInput').value = '';
