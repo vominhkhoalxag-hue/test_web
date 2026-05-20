@@ -285,13 +285,13 @@
 
 <script>
 const CATS = [
-  { label: 'Ăn uống',   icon: '🍜', color: '#fff3e0' },
-  { label: 'Di chuyển', icon: '🛵', color: '#e8f5e9' },
-  { label: 'Mua sắm',   icon: '🛍️', color: '#fce4ec' },
-  { label: 'Giải trí',  icon: '🎮', color: '#ede7f6' },
-  { label: 'Sức khoẻ',  icon: '💊', color: '#e0f7fa' },
-  { label: 'Trả nợ',   icon: '💸', color: '#fbe9e7' },
-  { label: 'Khác',      icon: '📦', color: '#f5f0e8' },
+  { label: 'Ăn uống',   icon: '🍜', color: '#fff3e0', keywords: ['cà phê', 'cafe', 'ăn', 'ăn trưa', 'ăn tối', 'ăn sáng', 'bún', 'phở', 'cơm', 'trà', 'bánh', 'uống nước'] },
+  { label: 'Di chuyển', icon: '🛵', color: '#e8f5e9', keywords: ['xăng', 'grab', 'xe', 'taxi', 'gửi xe', 'xanh sm'] },
+  { label: 'Mua sắm',   icon: '🛍️', color: '#fce4ec', keywords: ['mua', 'shop', 'quần', 'áo', 'giày', 'dép'] },
+  { label: 'Giải trí',  icon: '🎮', color: '#ede7f6', keywords: ['game', 'phim', 'netflix', 'genshin', 'liên quân', 'karaoke'] },
+  { label: 'Sức khoẻ',  icon: '💊', color: '#e0f7fa', keywords: ['thuốc', 'khám bệnh', 'bệnh viện', 'gym', 'vitamin'] },
+  { label: 'Trả nợ',   icon: '💸', color: '#fbe9e7', keywords: ['trả nợ', 'nợ'] },
+  { label: 'Khác',      icon: '📦', color: '#f5f0e8', keywords: [] },
 ];
 
 // Trả về tháng hiện tại dạng "YYYY-MM"
@@ -300,7 +300,7 @@ function nowMonthStr() {
   return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');
 }
 
-let entries = [], selectedCat = 'Ăn uống', filterCat = 'Tất cả', budget = 0, budgetFormOpen = false;
+let entries = [], selectedCat = 'Ăn uống', filterCat = 'Tất cả', budget = 0, budgetFormOpen = false, manualCat = false;
 let selectedDate = todayStr();
 let calMonth = nowMonthStr();
 let selectedMonth = nowMonthStr();
@@ -433,7 +433,11 @@ function renderCats() {
 
 // Chọn category khi click
 // → cập nhật selectedCat + render lại UI
-function selectCat(name) { selectedCat = name; renderCats(); }
+function selectCat(name) {
+  if (name !== detectCat(document.getElementById('nameInput').value)) manualCat = true;
+  selectedCat = name;
+  renderCats();
+}
 
 // Thêm khoản chi mới
 function addEntry() {
@@ -449,8 +453,18 @@ function addEntry() {
   save();
   document.getElementById('nameInput').value = '';
   document.getElementById('amountInput').value = '';
+  manualCat = false; //reset hành động chọn nhãn thủ công
   document.getElementById('nameInput').focus();
   render();
+}
+
+//match keyword
+function detectCat(name) {
+  const lower = name.toLowerCase();
+  for (const cat of CATS) {
+    if (cat.keywords.some(k => lower.includes(k))) return cat.label;
+  }
+  return null;
 }
 
 // Xoá 1 khoản chi theo id
@@ -666,6 +680,12 @@ function renderEntries() {
 document.getElementById('amountInput').addEventListener('keydown',e=>{if(e.key==='Enter')addEntry();});
 document.getElementById('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('amountInput').focus();});
 document.getElementById('budgetInput').addEventListener('keydown',e=>{if(e.key==='Enter')saveBudget();});
+document.getElementById('nameInput').addEventListener('input', e => {
+  if (!manualCat) {
+    const detected = detectCat(e.target.value);
+    if (detected) { selectedCat = detected; renderCats(); }
+  }
+});
 renderCats(); renderMonthPicker(); render();
 
 // Auto-refresh: kiểm tra mỗi phút, tự cập nhật khi sang ngày mới
