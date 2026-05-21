@@ -290,12 +290,12 @@ const CATS = [
                                                                 'haidilao', 'ăn mì', 'mua mì', 'mì ', 'cháo', 'hủ tiếu', 'phở', 'spagetti', 
                                                                 'thịt', ' heo', 'heo ', 'gà ', ' gà', 'vịt ', ' vịt', 'cá ', ' cá', 'bò ', ' bò', 'rau'] },
   { label: 'Di chuyển', icon: '🛵', color: '#e8f5e9', keywords: ['xăng', 'grab', 'tiền xe', 'đi xe', 'bus', 'buýt', 'taxi', 'gửi xe', 'xanh sm', 'máy bay'] },
-  { label: 'Mua sắm',   icon: '🛍️', color: '#fce4ec', keywords: ['mua sắm', 'quần', 'áo', 'giày', 'dép', 'túi', 'mỹ phẩm', 'shopee', 'tiktok', 'lazada', 'tiki',
-                                                                'siêu thị', 'bhx', 'bách hóa xanh', 'coopmart'] },
+  { label: 'Mua sắm',   icon: '🛍️', color: '#fce4ec', keywords: ['mua sắm', 'quần', 'áo', 'giày', 'dép', 'túi', 'mỹ phẩm', 'laptop', 'điện thoại', 'shopee',
+                                                                'tiktok', 'lazada', 'tiki', 'siêu thị', 'bhx', 'bách hóa xanh', 'coopmart'] },
   { label: 'Giải trí',  icon: '🎮', color: '#ede7f6', keywords: ['game', 'phim', 'netflix', 'genshin', 'liên quân', 'lol', 'csgo', 'thẻ tháng', 'hsr', 'karaoke',
-                                                                'youtube premium', 'đi chơi'] },
+                                                                'youtube premium', 'đi chơi', 'du lịch', 'Đà Lạt', 'Nha Trang', 'Đà Nẵng', 'Vũng Tàu'] },
   { label: 'Sức khoẻ',  icon: '💊', color: '#e0f7fa', keywords: ['thuốc', 'khám bệnh', 'bệnh viện', 'gym', 'vitamin'] },
-  { label: 'Trả nợ',   icon: '💸', color: '#fbe9e7', keywords: ['nợ'] },
+  { label: 'Trả nợ',   icon: '💸', color: '#fbe9e7', keywords: ['nợ'], priority: true },
   { label: 'Khác',      icon: '📦', color: '#f5f0e8', keywords: [] },
 ];
 
@@ -466,6 +466,11 @@ function addEntry() {
 //match keyword
 function detectCat(name) {
   const lower = name.toLowerCase();
+  // check priority trước
+  for (const cat of CATS) {
+    if (cat.priority && cat.keywords.some(k => lower.includes(k))) return cat.label;
+  }
+  // rồi mới check bình thường
   for (const cat of CATS) {
     if (cat.keywords.some(k => lower.includes(k))) return cat.label;
   }
